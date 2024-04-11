@@ -43,7 +43,7 @@ def query_invoice():
     ]
     subprocess.run(command)
     print("*"*50, command)
-    return command
+    return command p
 
 invoice_number = "1234"
 Customer_Name = "Notfound"
