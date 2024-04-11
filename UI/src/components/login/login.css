@@ -1,0 +1,88 @@
+/* src/components/signup.css */
+.signup-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-image: url('../assets/Signup_background.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.signup-heading {
+    text-align: center;
+    margin-bottom: 20px; /* Add margin to create space between heading and form */
+}
+
+.signup-card {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    width: 600px;
+    background-color: #B39DC5;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    color: #492F5D;
+}
+ 
+.details-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+}
+  
+.form-group {
+    width: 48%;
+    box-sizing: border-box;
+    padding: 10px;
+}
+  
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+  
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    box-sizing: border-box;
+    border: none;
+    border-bottom: 1px solid #492F5D;
+    outline: none;
+    background-color: transparent;
+    transition: border-bottom-color 0.3s;
+}
+  
+.form-group input:focus {
+    border-bottom-color: #492F5D;
+}
+  
+button {
+    width: 15%;
+    padding: 15px;
+    background-color: #492F5D;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-left: 15rem;
+    margin-top: 15px;
+}
+
+/* Move login link to the next line */
+.signup-card h4 {
+    margin-top: 10px;
+}
+
+/* Create a new container for the login link to move it to the next line */
+.login-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px; /* Adjust as needed */
+}

@@ -1,0 +1,15 @@
+syntax = "proto3";
+package invoice.invoice;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+
+option go_package = "invoice/x/invoice/types";
+
+// Params defines the parameters for the module.
+message Params {
+  option (amino.name) = "invoice/x/invoice/Params";
+  option (gogoproto.equal) = true;
+
+  
+}

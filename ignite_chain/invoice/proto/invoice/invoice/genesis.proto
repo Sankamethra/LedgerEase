@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package invoice.invoice;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "invoice/invoice/params.proto";
+import "invoice/invoice/invoice.proto";
+
+option go_package = "invoice/x/invoice/types";
+
+// GenesisState defines the invoice module's genesis state.
+message GenesisState {
+  
+  // params defines all the parameters of the module.
+           Params  params      = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+  repeated Invoice invoiceList = 2 [(gogoproto.nullable) = false] ;
+}
+

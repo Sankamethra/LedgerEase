@@ -1,0 +1,63 @@
+/* transactiondetails.css */
+
+/* Set background color for the whole page including the transaction details container */
+body {
+    background-color: #B39DC5; /* Page background color */
+}
+
+.transaction-details-container {
+    margin-top: 20px;
+    text-align: left;
+    background-color: #B39DC5; /* Background color for the transaction details container */
+    padding: 20px; /* Add padding for spacing */
+    border-radius: 8px; /* Add border radius for rounded corners */
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+}
+
+.transaction-details-heading {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.transaction-table {
+    width: 70%; /* Adjust the table width as needed */
+    margin: 0 auto; /* Center the table horizontally */
+    border-collapse: collapse;
+    background-color: #492F5D; /* Background color for the table */
+}
+
+.transaction-table th, .transaction-table td {
+    border-bottom: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+    color: #B39DC5;
+}
+
+.transaction-table th {
+    background-color: #492F5D;
+    color: #B39DC5;
+    padding: 10px; /* Add padding */
+    border-bottom: 1px solid #ddd;
+}
+
+.view-details-column {
+    width: 20%; /* Adjust the width of the column containing the View Details button */
+    color: #B39DC5;
+    padding: 6px 12px;
+}
+
+.view-details-button {
+    width: 40%; /* Adjust the width as needed */
+    padding: 6px 1px;
+    background-color: #B39DC5; /* Button background color */
+    color: #492F5D;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: block; /* Ensure button takes full width of column */
+    margin: 0 auto; /* Center button horizontally */
+}
+
+.view-details-button:hover {
+    background-color: #B39DC5; /* Button background color on hover */
+}

@@ -1,0 +1,65 @@
+syntax = "proto3";
+
+package invoice.invoice;
+
+import "amino/amino.proto";
+import "gogoproto/gogo.proto";
+import "google/api/annotations.proto";
+import "cosmos/base/query/v1beta1/pagination.proto";
+import "invoice/invoice/params.proto";
+import "invoice/invoice/invoice.proto";
+
+option go_package = "invoice/x/invoice/types";
+
+// Query defines the gRPC querier service.
+service Query {
+  
+  // Parameters queries the parameters of the module.
+  rpc Params (QueryParamsRequest) returns (QueryParamsResponse) {
+    option (google.api.http).get = "/invoice/invoice/params";
+  
+  }
+  
+  // Queries a list of Invoice items.
+  rpc Invoice    (QueryGetInvoiceRequest) returns (QueryGetInvoiceResponse) {
+    option (google.api.http).get = "/invoice/invoice/invoice/{index}";
+  
+  }
+  rpc InvoiceAll (QueryAllInvoiceRequest) returns (QueryAllInvoiceResponse) {
+    option (google.api.http).get = "/invoice/invoice/invoice";
+  
+  }
+}
+// QueryParamsRequest is request type for the Query/Params RPC method.
+message QueryParamsRequest {}
+
+// QueryParamsResponse is response type for the Query/Params RPC method.
+message QueryParamsResponse {
+  
+  // params holds all the parameters of this module.
+  Params params = 1 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+}
+
+message QueryGetInvoiceRequest {
+  string creator        =  1;
+  string index          =  2;
+  string Invoice_Number =  3;
+  string Customer_Name  =  4;
+  string Invoice_Date   =  5;
+  string Total_Amount   =  6;
+  string Due_Date       =  7;
+}
+
+message QueryGetInvoiceResponse {
+  Invoice invoice = 1 [(gogoproto.nullable) = false];
+}
+
+message QueryAllInvoiceRequest {
+  cosmos.base.query.v1beta1.PageRequest pagination = 1;
+}
+
+message QueryAllInvoiceResponse {
+  repeated Invoice                                invoice    = 1 [(gogoproto.nullable) = false];
+           cosmos.base.query.v1beta1.PageResponse pagination = 2;
+}
+

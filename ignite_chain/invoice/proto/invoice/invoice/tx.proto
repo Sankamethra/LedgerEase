@@ -1,0 +1,95 @@
+syntax = "proto3";
+
+package invoice.invoice;
+
+import "amino/amino.proto";
+import "cosmos/msg/v1/msg.proto";
+import "cosmos_proto/cosmos.proto";
+import "gogoproto/gogo.proto";
+import "invoice/invoice/params.proto";
+import "invoice/invoice/invoice.proto";
+
+option go_package = "invoice/x/invoice/types";
+
+// Msg defines the Msg service.
+service Msg {
+  option (cosmos.msg.v1.service) = true;
+  
+  // UpdateParams defines a (governance) operation for updating the module
+  // parameters. The authority defaults to the x/gov module account.
+  rpc UpdateParams  (MsgUpdateParams ) returns (MsgUpdateParamsResponse );
+  rpc Storeinvoice  (MsgStoreinvoice ) returns (MsgStoreinvoiceResponse );
+  rpc CreateInvoice (MsgCreateInvoice) returns (MsgCreateInvoiceResponse);
+  rpc UpdateInvoice (MsgUpdateInvoice) returns (MsgUpdateInvoiceResponse);
+  rpc DeleteInvoice (MsgDeleteInvoice) returns (MsgDeleteInvoiceResponse);
+}
+// MsgUpdateParams is the Msg/UpdateParams request type.
+message MsgUpdateParams {
+  option (cosmos.msg.v1.signer) =                         "authority";
+  option           (amino.name) = "invoice/x/invoice/MsgUpdateParams";
+  
+  // authority is the address that controls the module (defaults to x/gov unless overwritten).
+  string authority = 1 [(cosmos_proto.scalar) = "cosmos.AddressString"];
+
+  // params defines the module parameters to update.
+  
+  // NOTE: All parameters must be supplied.
+  Params params = 2 [(gogoproto.nullable) = false, (amino.dont_omitempty) = true];
+}
+
+// MsgUpdateParamsResponse defines the response structure for executing a
+// MsgUpdateParams message.
+message MsgUpdateParamsResponse {}
+
+message MsgStoreinvoice {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator        =  1;
+  string index          =  2;
+  string Invoice_Number =  3;
+  string Customer_Name  =  4;
+  string Invoice_Date   =  5;
+  string Total_Amount   =  6;
+  string Due_Date       =  7;
+}
+
+message MsgStoreinvoiceResponse {}
+
+message MsgCreateInvoice {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator        =  1;
+  string index          =  2;
+  string Invoice_Number =  3;
+  string Customer_Name  =  4;
+  string Invoice_Date   =  5;
+  string Total_Amount   =  6;
+  string Due_Date       =  7; 
+}
+
+message MsgCreateInvoiceResponse {}
+
+message MsgUpdateInvoice {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator        =  1;
+  string index          =  2;
+  string Invoice_Number =  3;
+  string Customer_Name  =  4;
+  string Invoice_Date   =  5;
+  string Total_Amount   =  6;
+  string Due_Date       =  7;
+}
+
+message MsgUpdateInvoiceResponse {}
+
+message MsgDeleteInvoice {
+  option (cosmos.msg.v1.signer) = "creator";
+  string creator        =  1;
+  string index          =  2;
+  string Invoice_Number =  3;
+  string Customer_Name  =  4;
+  string Invoice_Date   =  5;
+  string Total_Amount   =  6;
+  string Due_Date       =  7;
+}
+
+message MsgDeleteInvoiceResponse {}
+

@@ -1,0 +1,15 @@
+syntax = "proto3";
+package invoice.invoice;
+
+option go_package = "invoice/x/invoice/types";
+
+message Invoice {
+  string creator        =  1;
+  string index          =  2; 
+  string Invoice_Number =  3;
+  string Customer_Name  =  4;
+  string Invoice_Date   =  5;
+  string Total_Amount   =  6;
+  string Due_Date       =  7;
+}
+

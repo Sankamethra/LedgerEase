@@ -1,0 +1,43 @@
+/* Header.css */
+.header {
+    background-color: #333; /* Add your desired background color */
+    color: #fff; /* Set text color */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-image: url('../assets/Signup_background.png');
+}
+
+.logo-container {
+    flex: 0 0 auto; /* Prevent logo from shrinking */
+}
+
+.logo {
+    height: 50px; /* Set your logo height */
+    width: auto; /* Maintain aspect ratio */
+}
+
+.heading-container {
+    flex-grow: 1; /* Allow heading to grow and take available space */
+    text-align: left;
+}
+
+.menu ul {
+    list-style-type: none;
+    margin: 30;
+    padding: 0;
+    margin-left: 30px;
+}
+
+.menu li {
+    display: inline-block;
+    margin-left: 50px; /* Adjust spacing between menu items */
+}
+
+.menu {
+    margin-left: 90px;
+    align-items: center;
+}
+
+
