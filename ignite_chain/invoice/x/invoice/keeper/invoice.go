@@ -55,7 +55,7 @@ func (k Keeper) GetInvoice(
 	return val, true
 }
 
-// RemoveInvoice removes a invoice from the store
+// RemoveInvoice removes a specific invoice from the store based on its index
 func (k Keeper) RemoveInvoice(
 	ctx context.Context,
 	creator string,
@@ -65,18 +65,13 @@ func (k Keeper) RemoveInvoice(
 	Invoice_Date string,
 	Total_Amount string,
 	Due_Date string,
-
 ) {
 	storeAdapter := runtime.KVStoreAdapter(k.storeService.OpenKVStore(ctx))
 	store := prefix.NewStore(storeAdapter, types.KeyPrefix(types.InvoiceKeyPrefix))
-	store.Delete(types.InvoiceKey(
-		creator,
-		// InvoiceId,
-		// Company,
-		// DueDate,
-		// Amount,
-	))
+	key := types.InvoiceKey(index) // Assuming 'index' is the correct parameter to uniquely identify an invoice
+	store.Delete(key)
 }
+
 
 // GetAllInvoice returns all invoice
 func (k Keeper) GetAllInvoice(ctx context.Context) (list []types.Invoice) {

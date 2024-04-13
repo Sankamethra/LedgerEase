@@ -20,7 +20,7 @@ def store_invoice(invoice_number, customer_name, invoice_date, total_amount, due
         "invoice",
         "storeinvoice",
         "--from",
-        "cosmos1quvw5unspdfrml3g07lpr9e8kfmghvppxydv2d",
+        "cosmos1lpcgfh9gjs7r87sqrzjes3asmamd8k009j45k6",
         "--chain-id=invoice",
         "--index=1",
         f"--invoice-number={invoice_number}",
@@ -43,14 +43,13 @@ def query_invoice():
     ]
     subprocess.run(command)
     print("*"*50, command)
-    return command p
+    return command 
 
-invoice_number = "1234"
-Customer_Name = "Notfound"
-Invoice_Date = "06-12-99"
-Issue_Date = "06-12-99"
-Total_Amount = "1000"
-Due_Date = "20-12-2024"
+invoice_number = "INV-100"
+Customer_Name = "MICROSOFT CORPORATION"
+Invoice_Date = "2019-11-15"
+Total_Amount = "110.0 USD"
+Due_Date = "2019-12-15"
 
 print(">"*10,store_invoice(invoice_number, Customer_Name , Invoice_Date , Total_Amount , Due_Date))
 print("*"*20,query_invoice())
