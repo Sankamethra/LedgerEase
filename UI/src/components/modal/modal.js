@@ -8,8 +8,11 @@ const Modal = ({ invoice, onClose }) => {
         <button className="modal-close-btn" onClick={onClose}>
           X
         </button>
-        {invoice && invoice.imageSrc && (
-          <img src={invoice.imageSrc} alt="Invoice" />
+        {invoice && invoice.image && (
+          <img
+            src={`data:image/jpeg;base64,${invoice.image.data}`}
+            alt="Invoice"
+          />
         )}
       </div>
     </div>
