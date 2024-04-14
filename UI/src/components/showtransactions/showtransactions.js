@@ -49,6 +49,7 @@ const ShowTransactions = () => {
 
 
   const handleViewDetails = async (invoice) => {
+
     setSelectedInvoice(invoice);
     setIsModalOpen(true);
   };
@@ -57,6 +58,24 @@ const ShowTransactions = () => {
     setIsModalOpen(false); // Close the modal
   };
 
+
+   // Filter out rows with empty or "N/A" fields
+   const filteredInvoices = invoices.filter((invoice) => {
+    const {
+      Invoice_Number,
+      Customer_Name,
+      Invoice_Date,
+      Total_Amount,
+      Due_Date,
+    } = invoice;
+    return (
+      Invoice_Number?.trim() !== "N/A" &&
+      Customer_Name?.trim() !== "N/A" &&
+      Invoice_Date?.trim() !== "N/A" &&
+      Total_Amount?.trim() !== "N/A" &&
+      Due_Date?.trim() !== "N/A"
+    );
+  });
   
 
   return (
@@ -79,13 +98,13 @@ const ShowTransactions = () => {
               </tr>
             </thead>
             <tbody>
-              {invoices.map((invoice, index) => (
+            {filteredInvoices.map((invoice, index) => (
                 <tr key={index}>
-                  <td>{invoice["Invoice_Number"]}</td>
-                  <td>{invoice["Customer_Name"]}</td>
-                  <td>{invoice["Invoice_Date"]}</td>
-                  <td>{invoice["Total_Amount"]}</td>
-                  <td>{invoice["Due_Date"]}</td>
+                <td>{invoice.Invoice_Number || "N/A"}</td>
+                <td>{invoice.Customer_Name || "N/A"}</td>
+                <td>{invoice.Invoice_Date || "N/A"}</td>
+                <td>{invoice.Total_Amount || "N/A"}</td>
+                <td>{invoice.Due_Date || "N/A"}</td>
                   <td>
                     <button onClick={() => handleViewDetails(invoice)}>
                       View Details
@@ -104,5 +123,6 @@ const ShowTransactions = () => {
     </div>
   );
 };
+;
 
 export default ShowTransactions;

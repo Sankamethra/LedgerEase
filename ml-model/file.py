@@ -259,23 +259,6 @@ def get_invoices():
 
 from flask import send_file
 
-@app.route('/invoices/<invoice_id>', methods=['GET'])
-def get_invoice_image(invoice_id):
-    try:
-        invoice = collection.find_one({"_id": ObjectId(invoice_id)}, {"data": 1, "contentType": 1})
-
-        if not invoice:
-            return jsonify({"error": "Invoice not found"}), 404
-
-        # Extract the image data and content type
-        image_data = invoice.get("data", "")
-        content_type = invoice.get("contentType", "image/jpeg")
-
-        # Return the image data as a response with the correct content type
-        return send_file(io.BytesIO(base64.b64decode(image_data)), mimetype=content_type)
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
-
 
 if __name__ == '__main__':
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
