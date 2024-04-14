@@ -57,7 +57,7 @@ To check the data stored in the blockchain, use the following command:
 
 ```bash
 cd LedgerEase/ignite-chain/invoice
-invoiced q list-invoice --chain-id=invoice
+invoiced q invoice list-invoice --chain-id=invoice
 ```
 
 ## Notes
