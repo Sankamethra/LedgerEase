@@ -66,8 +66,13 @@ def store_invoice():
         latest_index = None
         try:
             output_lines = index_output.stdout.strip().splitlines()
-            latest_index_str = output_lines[-1].split(":")[-1].strip().strip('"')  # Remove double quotes
-            latest_index = int(latest_index_str) + 1  # Increment the latest index
+            index_values = [int(line.split(":")[-1].strip().strip('"')) for line in output_lines if "index:" in line]
+            print("Index values", index_values)
+            if index_values:
+                latest_index = max(index_values) + 1
+                print("Latest Index (Before Increment):", latest_index)  # Debug statement
+            else:
+                return jsonify({"error": "No index values found in the output"}), 500
         except Exception as e:
             return jsonify({"error": f"Failed to parse index output: {str(e)}"}), 500
 
@@ -99,13 +104,13 @@ def store_invoice():
             f"--due-date={due_date}"
         ]
         subprocess.run(store_command)
-        print("Running Query command:"," ".join(store_command))
+        print("Running Query command:", " ".join(store_command))
 
         return jsonify({"message": "Invoice stored successfully", "index": latest_index})
 
     except Exception as e:
         return jsonify({"error": str(e)}), 500
-    
+
 @app.route('/query', methods=['GET'])
 def query_invoice():
     try:
@@ -116,7 +121,7 @@ def query_invoice():
         # Ensure invoices_list is a JSON serializable object (list of dictionaries)
         if invoices_list is None:
             return jsonify({"error": "Failed to parse invoice list"}), 500
-        
+                
         return jsonify({"message": "Invoice queried successfully", "invoice": invoices_list})
     except subprocess.CalledProcessError as e:
         # Handle subprocess errors
@@ -170,6 +175,7 @@ def process_invoice_entry(entry):
     except Exception as e:
         return None
 
+
     
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -185,26 +191,31 @@ def upload_file():
         unique_filename = generate_unique_filename(file.filename)
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
 
-        # Print current working directory for debug
-        # print("Current Working Directory:", os.getcwd())
-
         # Save file
-        # print("Saving file to:", filepath)  # Debug statement
         file.save(filepath)
 
         # Check if the file was saved successfully
         if not os.path.exists(filepath):
             return jsonify({"error": "Failed to save file"}), 500
 
+        # Store the image file in MongoDB
+        with open(filepath, "rb") as f:
+            image_data = f.read()  # Read image data as bytes
+            image_base64 = b64encode(image_data).decode('utf-8')  # Encode bytes to base64 string
+            image_doc = {
+                'filename': unique_filename,
+                'data': image_base64,
+                'contentType': 'image/jpeg'
+            }
+            collection.insert_one(image_doc)
+
         # Perform document analysis
         with open(filepath, "rb") as f:
-            poller = document_analysis_client.begin_analyze_document(
-                "prebuilt-invoice", f)
+            poller = document_analysis_client.begin_analyze_document("prebuilt-invoice", f)
             invoices = poller.result()
 
         # Extract data from invoices
-        results = [extract_invoice_data(invoice)
-                    for invoice in invoices.documents]
+        results = [extract_invoice_data(invoice) for invoice in invoices.documents]
 
         # Call the store_invoice function with extracted data
         for result in results:
@@ -212,37 +223,20 @@ def upload_file():
             if response.status_code != 200:
                 print("Failed to store invoice:", response.json())
 
-        # Insert extracted data into MongoDB collection
-        for result in results:
-            with open(filepath, "rb") as f:
-                image_data = f.read()  # Read image data as bytes
-                image_base64 = b64encode(image_data).decode(
-                    'utf-8')  # Encode bytes to base64 string
-                image_data = {  # Create dictionary for image details
-                    'data': image_base64,
-                    'contentType': 'image/jpeg'
-                }
-                result['image'] = image_data  # Add image data to result
-            collection.insert_one(result)
-
-        # Print the result
-        # print("Extracted Invoice Data:")
-        # for idx, result in enumerate(results):
-        #     print(f"Invoice #{idx + 1}:")
-        #     for key, value in result.items():
-        #         print(f"{key}: {value}")
-
-        # Convert MongoDB documents to dictionaries without ObjectId
-        results_serializable = [json.loads(json.dumps(
-            result, default=str)) for result in results]
-
-        return jsonify({"message": "File uploaded and processed successfully", "results": results_serializable})
+        # Return the image filename
+        return jsonify({"message": "File uploaded and processed successfully", "image_filename": unique_filename})
 
     except FileNotFoundError:
         return jsonify({"error": "File not found"}), 404
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+def generate_unique_filename(filename):
+    # Generate a unique filename using timestamp and uuid
+    timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+    unique_id = str(uuid.uuid4().hex)
+    _, extension = os.path.splitext(filename)
+    return f"{timestamp}_{unique_id}{extension}"
 
 @app.route('/invoices', methods=['GET'])
 def get_invoices():
@@ -258,6 +252,21 @@ def get_invoices():
         # print("Fetched Invoices:", fetched_invoices)
 
         return jsonify(invoices_list)
+    except pymongo.errors.PyMongoError as e:
+        return jsonify({"error": f"MongoDB error: {str(e)}"}), 500
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route('/invoices/<invoice_id>/image', methods=['GET'])
+def get_invoice_image(invoice_id):
+    try:
+        # Retrieve the invoice document from MongoDB based on the invoice ID
+        invoice_document = collection.find_one({"_id": ObjectId(invoice_id)})
+        if invoice_document:
+            image_base64 = invoice_document.get('data', '')  # Assuming 'data' contains the base64 encoded image
+            return jsonify({"data": image_base64})
+        else:
+            return jsonify({"error": "Invoice not found"}), 404
     except pymongo.errors.PyMongoError as e:
         return jsonify({"error": f"MongoDB error: {str(e)}"}), 500
     except Exception as e:

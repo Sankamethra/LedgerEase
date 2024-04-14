@@ -5,6 +5,7 @@ import "./showtransactions.css";
 const ShowTransactions = () => {
     const [invoices, setInvoices] = useState([]);
     const [error, setError] = useState(null);
+    const [selectedInvoice, setSelectedInvoice] = useState(null);
 
     useEffect(() => {
         const fetchInvoices = async () => {
@@ -13,7 +14,7 @@ const ShowTransactions = () => {
                 if (response.ok) {
                     const data = await response.json();
                     console.log("Fetched data:", data);
-                    setInvoices(data.invoice || []);
+                    setInvoices(data.invoice);
                 } else {
                     const errorData = await response.json();
                     setError(errorData.error || "Failed to fetch invoices");
@@ -26,6 +27,32 @@ const ShowTransactions = () => {
 
         fetchInvoices();
     }, []);
+
+    const handleViewDetails = async (invoiceId) => {
+        console.log("Clicked View Details for Invoice ID:", invoiceId); // Add this log to check if the function is triggered
+    
+        if (!invoiceId) {
+            console.error("Invalid invoice ID:", invoiceId);
+            return;
+        }
+    
+        try {
+            const response = await fetch(`http://localhost:5002/invoices/${invoiceId}/image`);
+            console.log("Fetch Response:", response); // Log the fetch response for debugging
+            if (response.ok) {
+                const imageData = await response.json();
+                console.log("Invoice Image Data:", imageData);
+                setSelectedInvoice({ id: invoiceId, image: imageData.data });
+            } else {
+                console.error("Failed to fetch invoice image:", response.status);
+            }
+        } catch (error) {
+            console.error("Error fetching invoice image:", error);
+        }
+    };
+    
+    
+    
 
     return (
         <div>
@@ -43,22 +70,36 @@ const ShowTransactions = () => {
                                 <th>Invoice Date</th>
                                 <th>Total Amount</th>
                                 <th>Due Date</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
                             {invoices.map((invoice, index) => (
                                 <tr key={index}>
-                                    <td>{invoice["Invoice_Number"] || "N/A"}</td>
-                                    <td>{invoice["Customer_Name"] || "N/A"}</td>
-                                    <td>{invoice["Invoice_Date"] || "N/A"}</td>
-                                    <td>{invoice["Total_Amount"] || "N/A"}</td>
-                                    <td>{invoice["Due_Date"] || "N/A"}</td>
+                                    <td>{invoice["Invoice_Number"]}</td>
+                                    <td>{invoice["Customer_Name"]}</td>
+                                    <td>{invoice["Invoice_Date"]}</td>
+                                    <td>{invoice["Total_Amount"]}</td>
+                                    <td>{invoice["Due_Date"]}</td>
+                                    <td>
+                                        <button onClick={() => handleViewDetails(invoice["_id"])}>
+                                            View Details
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                     </table>
                 )}
             </div>
+            {selectedInvoice && (
+                <div className="modal">
+                    <div className="modal-content">
+                        <span className="close" onClick={() => setSelectedInvoice(null)}>&times;</span>
+                        <img src={`data:image/jpeg;base64,${selectedInvoice.image}`} alt="Invoice" />
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
