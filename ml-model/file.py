@@ -245,11 +245,10 @@ def get_invoices():
         invoices = collection.find({}, {"_id": 0})
 
         invoices_list = [json.loads(json.dumps(invoice, default=str))
-                        for invoice in invoices]
+                         for invoice in invoices]
 
         # Debug print to check fetched invoices
         fetched_invoices = invoices_list
-        # print("Fetched Invoices:", fetched_invoices)
 
         return jsonify(invoices_list)
     except pymongo.errors.PyMongoError as e:
@@ -257,18 +256,23 @@ def get_invoices():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
-@app.route('/invoices/<invoice_id>/image', methods=['GET'])
+
+from flask import send_file
+
+@app.route('/invoices/<invoice_id>', methods=['GET'])
 def get_invoice_image(invoice_id):
     try:
-        # Retrieve the invoice document from MongoDB based on the invoice ID
-        invoice_document = collection.find_one({"_id": ObjectId(invoice_id)})
-        if invoice_document:
-            image_base64 = invoice_document.get('data', '')  # Assuming 'data' contains the base64 encoded image
-            return jsonify({"data": image_base64})
-        else:
+        invoice = collection.find_one({"_id": ObjectId(invoice_id)}, {"data": 1, "contentType": 1})
+
+        if not invoice:
             return jsonify({"error": "Invoice not found"}), 404
-    except pymongo.errors.PyMongoError as e:
-        return jsonify({"error": f"MongoDB error: {str(e)}"}), 500
+
+        # Extract the image data and content type
+        image_data = invoice.get("data", "")
+        content_type = invoice.get("contentType", "image/jpeg")
+
+        # Return the image data as a response with the correct content type
+        return send_file(io.BytesIO(base64.b64decode(image_data)), mimetype=content_type)
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
