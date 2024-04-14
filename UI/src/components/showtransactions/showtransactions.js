@@ -27,24 +27,9 @@ const ShowTransactions = () => {
       }
     };
 
-    const getInvoiceImage = async (invoiceId) => {
-        try {
-          const response = await fetch(`http://localhost:5002/invoices`);
-          if (response.ok) {
-            const imageData = await response.blob(); // Get image data as Blob
-            return URL.createObjectURL(imageData); // Create object URL for the image blob
-          } else {
-            console.error("Failed to fetch invoice image:", response.status);
-            return null;
-          }
-        } catch (error) {
-          console.error("Error fetching invoice image:", error);
-          return null;
-        }
-      };
 
     fetchInvoices();
-    getInvoiceImage();
+
   }, []);
 
 
@@ -57,12 +42,6 @@ const ShowTransactions = () => {
   const handleCloseModal = () => {
     setIsModalOpen(false); // Close the modal
   };
-
-
-  // Filter out rows with empty or "N/A" fields
-  const filteredInvoices = invoices.filter((invoice) =>
-    Object.values(invoice).every((value) => value && value.trim() !== "" && value.trim() !== "N/A")
-  );
 
   
 
@@ -82,22 +61,16 @@ const ShowTransactions = () => {
                 <th>Invoice Date</th>
                 <th>Total Amount</th>
                 <th>Due Date</th>
-                <th>Action</th>
               </tr>
             </thead>
             <tbody>
-            {filteredInvoices.map((invoice, index) => (
+            {invoices.map((invoice, index) => (
                 <tr key={index}>
                 <td>{invoice.Invoice_Number}</td>
                 <td>{invoice.Customer_Name}</td>
                 <td>{invoice.Invoice_Date}</td>
                 <td>{invoice.Total_Amount}</td>
                 <td>{invoice.Due_Date}</td>
-                  <td>
-                    <button onClick={() => handleViewDetails(invoice)}>
-                      View Details
-                    </button>
-                  </td>
                 </tr>
               ))}
             </tbody>
