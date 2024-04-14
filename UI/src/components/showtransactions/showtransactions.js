@@ -27,46 +27,37 @@ const ShowTransactions = () => {
       }
     };
 
+    const getInvoiceImage = async (invoiceId) => {
+        try {
+          const response = await fetch(`http://localhost:5002/invoices`);
+          if (response.ok) {
+            const imageData = await response.blob(); // Get image data as Blob
+            return URL.createObjectURL(imageData); // Create object URL for the image blob
+          } else {
+            console.error("Failed to fetch invoice image:", response.status);
+            return null;
+          }
+        } catch (error) {
+          console.error("Error fetching invoice image:", error);
+          return null;
+        }
+      };
+
     fetchInvoices();
+    getInvoiceImage();
   }, []);
 
+
   const handleViewDetails = async (invoice) => {
-    console.log("Clicked View Details for Invoice:", invoice);
-    if (!invoice || !invoice["_id"]) { // Check for "_id" existence
-      console.error("Invalid invoice:", invoice);
-      return;
-    }
-    
-    const invoiceId = invoice["_id"]; // Get the invoice ID
-    console.log(invoiceId)
-    try {
-      // Fetch the image data using the correct endpoint with invoiceId
-      const response = await fetch(`http://localhost:5002/invoices/${invoiceId}`);
-      // Rest of the function...
-    } catch (error) {
-      console.error("Error handling view details:", error);
-    }
+    setSelectedInvoice(invoice);
+    setIsModalOpen(true);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false); // Close the modal
   };
 
-  const getInvoiceImage = async (invoiceId) => {
-    try {
-      const response = await fetch(`http://localhost:5002/invoices`);
-      if (response.ok) {
-        const imageData = await response.blob(); // Get image data as Blob
-        return URL.createObjectURL(imageData); // Create object URL for the image blob
-      } else {
-        console.error("Failed to fetch invoice image:", response.status);
-        return null;
-      }
-    } catch (error) {
-      console.error("Error fetching invoice image:", error);
-      return null;
-    }
-  };
+  
 
   return (
     <div>
