@@ -58,36 +58,36 @@ Follow these steps to set up and run the LedgerEase project:
 
 1. *Machine Learning Model*
 
-   - Navigate to LedgerEase/ml-model.
+   - Navigate to `LedgerEase/ml-model`.
 
-   - Run python3 file.py to start the ML model. This model will handle data extraction and processing.
+   - Run ```python3 file.py``` to start the ML model. This model will handle data extraction and processing.
 
 
 2. *Cosmos Blockchain*
 
-   - Start the blockchain by navigating to LedgerEase/ignite-chain/invoice.
+   - Start the blockchain by navigating to `LedgerEase/ignite-chain/invoice`.
 
-   - Build the chain binaries using make build-linux.
+   - Build the chain binaries using ```make build-linux```.
 
-   - Move the binaries to bin directory: sudo cp -r invoiced /usr/local/bin.
+   - Move the binaries to bin directory: ```sudo cp -r invoiced /usr/local/bin```.
 
-   - Run the blockchain using the command ignite chain serve.
+   - Run the blockchain using the command ```ignite chain serve```.
 
 
 3. *React Front-end*
 
-   - Navigate to LedgerEase/UI.
+   - Navigate to `LedgerEase/UI`.
 
-   - Install necessary dependencies and packages with npm install.
+   - Install necessary dependencies and packages with ```npm install```.
 
-   - Start the React app with npm run start. This will launch the user interface for interacting with the ledger.
+   - Start the React app with ```npm run start```. This will launch the user interface for interacting with the ledger.
 
 
 4. *Node.js Back-end*
 
-   - Start the MongoDB service with sudo systemctl start mongod.service.
+   - Start the MongoDB service with ```sudo systemctl start mongod.service```.
 
-   - Start the NodeJS server by navigating to LedgerEase/server and running node server.js. 
+   - Start the NodeJS server by navigating to `LedgerEase/server` and running ```node server.js```. 
 
    This server handles communication with the blockchain and the machine learning model.
 
